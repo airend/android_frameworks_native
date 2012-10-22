@@ -41,6 +41,10 @@ struct hwc_display_contents_1;
 struct hwc_layer_1;
 struct hwc_procs;
 struct framebuffer_device_t;
+#ifdef OMAP_ENHANCEMENT
+struct hwc_layer_extended;
+struct hwc_layer_list_extended;
+#endif
 
 namespace android {
 // ---------------------------------------------------------------------------
@@ -166,6 +170,9 @@ public:
         virtual int32_t getCompositionType() const = 0;
         virtual uint32_t getHints() const = 0;
         virtual sp<Fence> getAndResetReleaseFence() = 0;
+#ifdef OMAP_ENHANCEMENT
+        virtual void setIdentity(uint32_t identity) = 0;
+#endif
         virtual void setDefaultState() = 0;
         virtual void setSkip(bool skip) = 0;
         virtual void setDim() = 0;
@@ -250,7 +257,6 @@ public:
     // Returns an iterator to the end of the layer list
     LayerListIterator end(int32_t id);
 
-
     // Events handling ---------------------------------------------------------
 
     enum {
@@ -334,6 +340,7 @@ private:
 #ifdef OMAP_ENHANCEMENT
     static int hook_extension_cb(struct hwc_procs* procs, int operation,
             void** data, int size);
+    int extendedApiLayerData(hwc_layer_extended* linfo);
 #endif
     inline void invalidate();
     inline void vsync(int disp, int64_t timestamp);
@@ -355,6 +362,9 @@ private:
         bool hasOvComp;
         size_t capacity;
         hwc_display_contents_1* list;
+#ifdef OMAP_ENHANCEMENT
+        hwc_layer_list_extended* listExt;
+#endif
         hwc_layer_1* framebufferTarget;
         buffer_handle_t fbTargetHandle;
         sp<Fence> lastRetireFence;  // signals when the last set op retires
@@ -379,6 +389,9 @@ private:
     // invariant: mLists[0] != NULL iff mHwc != NULL
     // mLists[i>0] can be NULL. that display is to be ignored
     struct hwc_display_contents_1*  mLists[MAX_HWC_DISPLAYS];
+#ifdef OMAP_ENHANCEMENT
+    hwc_layer_list_extended*        mListsExt[MAX_HWC_DISPLAYS];
+#endif
     DisplayData                     mDisplayData[MAX_HWC_DISPLAYS];
     // protect mDisplayData from races between prepare and dump
     mutable Mutex mDisplayLock;

@@ -218,6 +218,9 @@ protected:
 public:
     // -----------------------------------------------------------------------
 
+#ifdef OMAP_ENHANCEMENT
+    virtual void setIdentity(HWComposer::HWCLayerInterface& layer);
+#endif
     void setGeometry(const sp<const DisplayDevice>& hw,
             HWComposer::HWCLayerInterface& layer);
     virtual void setPerFrameData(const sp<const DisplayDevice>& hw,

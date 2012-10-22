@@ -1183,6 +1183,9 @@ void SurfaceFlinger::setUpHWComposer() {
                         const HWComposer::LayerListIterator end = hwc.end(id);
                         for (size_t i=0 ; cur!=end && i<count ; ++i, ++cur) {
                             const sp<Layer>& layer(currentLayers[i]);
+#ifdef OMAP_ENHANCEMENT
+                            layer->setIdentity(*cur);
+#endif
                             layer->setGeometry(hw, *cur);
                             if (mDebugDisableHWC || mDebugRegion || mDaltonize || mHasColorMatrix) {
                                 cur->setSkip(true);
