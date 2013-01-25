@@ -45,6 +45,7 @@ struct framebuffer_device_t;
 struct hwc_layer_extended;
 struct hwc_layer_list_extended;
 struct hwc_layer_stack;
+struct hwc_display_info;
 #endif
 
 namespace android {
@@ -347,6 +348,7 @@ private:
             void** data, int size);
     int extendedApiLayerData(hwc_layer_extended* linfo);
     int extendedApiLayerStack(hwc_layer_stack* param);
+    int extendedApiDisplayInfo(hwc_display_info* param);
 #endif
     inline void invalidate();
     inline void vsync(int disp, int64_t timestamp);

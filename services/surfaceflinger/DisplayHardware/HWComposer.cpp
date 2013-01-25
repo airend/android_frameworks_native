@@ -340,6 +340,11 @@ int HWComposer::hook_extension_cb(struct hwc_procs* procs, int operation,
             return -1;
         rv = reinterpret_cast<cb_context *>(procs)->hwc->extendedApiLayerStack((hwc_layer_stack_t*)*data);
         break;
+    case HWC_EXTENDED_OP_DISPLAYINFO:
+        if (size != sizeof(hwc_display_info_t))
+            return -1;
+        rv = reinterpret_cast<cb_context *>(procs)->hwc->extendedApiDisplayInfo((hwc_display_info_t*)*data);
+        break;
     }
     return rv;
 }
@@ -362,6 +367,15 @@ int HWComposer::extendedApiLayerStack(hwc_layer_stack* param) {
     if (dpy > 31 || !mAllocatedDisplayIDs.hasBit(dpy))
         return BAD_INDEX;
     param->stack = mDisplayData[dpy].layerStack;
+    return NO_ERROR;
+}
+
+int HWComposer::extendedApiDisplayInfo(hwc_display_info* param) {
+    uint32_t dpy = param->dpy;
+    if (dpy > 31 || !mAllocatedDisplayIDs.hasBit(dpy))
+        return BAD_INDEX;
+    param->width = mDisplayData[dpy].width;
+    param->height = mDisplayData[dpy].height;
     return NO_ERROR;
 }
 #endif
