@@ -80,7 +80,12 @@ FramebufferNativeWindow::FramebufferNativeWindow()
     if (hw_get_module(GRALLOC_HARDWARE_MODULE_ID, &module) == 0) {
         int err;
         int i;
+#ifdef OMAP_ENHANCEMENT
+        // by default we use FB0 for command line GL apps
+        err = framebuffer_open(module, &fbDev, GRALLOC_HARDWARE_FB0);
+#else
         err = framebuffer_open(module, &fbDev);
+#endif
         ALOGE_IF(err, "couldn't open framebuffer HAL (%s)", strerror(-err));
 
         err = gralloc_open(module, &grDev);

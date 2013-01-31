@@ -366,6 +366,12 @@ private:
 
     sp<SurfaceFlinger>              mFlinger;
     framebuffer_device_t*           mFbDev;
+#ifdef OMAP_ENHANCEMENT
+    // we still use FB HAL to do composition, so
+    // creating one more fb instance for HWCv1.1
+    // FIXME: remove FB HAL.
+    framebuffer_device_t*           mFbDev2;
+#endif
     struct hwc_composer_device_1*   mHwc;
     // invariant: mLists[0] != NULL iff mHwc != NULL
     // mLists[i>0] can be NULL. that display is to be ignored

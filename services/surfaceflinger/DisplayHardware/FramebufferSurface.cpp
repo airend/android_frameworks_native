@@ -41,6 +41,10 @@
 #define NUM_FRAMEBUFFER_SURFACE_BUFFERS (2)
 #endif
 
+#ifdef OMAP_ENHANCEMENT
+#define GRALLOC_USAGE_HW_FB1 GRALLOC_USAGE_PRIVATE_3
+#endif
+
 // ----------------------------------------------------------------------------
 namespace android {
 // ----------------------------------------------------------------------------
@@ -61,9 +65,18 @@ FramebufferSurface::FramebufferSurface(HWComposer& hwc, int disp,
 {
     mName = "FramebufferSurface";
     mConsumer->setConsumerName(mName);
+#ifdef OMAP_ENHANCEMENT
+    if (disp == 0)
+#endif
     mConsumer->setConsumerUsageBits(GRALLOC_USAGE_HW_FB |
                                        GRALLOC_USAGE_HW_RENDER |
                                        GRALLOC_USAGE_HW_COMPOSER);
+#ifdef OMAP_ENHANCEMENT
+    else if (disp == 1)
+        mConsumer->setConsumerUsageBits(GRALLOC_USAGE_HW_FB1 |
+                                           GRALLOC_USAGE_HW_RENDER |
+                                           GRALLOC_USAGE_HW_COMPOSER);
+#endif
     mConsumer->setDefaultBufferFormat(mHwc.getFormat(disp));
     mConsumer->setDefaultBufferSize(mHwc.getWidth(disp),  mHwc.getHeight(disp));
     mConsumer->setDefaultMaxBufferCount(NUM_FRAMEBUFFER_SURFACE_BUFFERS);

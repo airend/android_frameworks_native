@@ -88,7 +88,11 @@ HWComposer::HWComposer(
         const sp<SurfaceFlinger>& flinger,
         EventHandler& handler)
     : mFlinger(flinger),
-      mFbDev(0), mHwc(0), mNumDisplays(1),
+      mFbDev(0),
+#ifdef OMAP_ENHANCEMENT
+      mFbDev2(0),
+#endif
+      mHwc(0), mNumDisplays(1),
       mCBContext(new cb_context),
       mEventHandler(handler),
       mDebugForceFakeVSync(false)
@@ -213,6 +217,12 @@ HWComposer::~HWComposer() {
     if (mFbDev) {
         framebuffer_close(mFbDev);
     }
+#ifdef OMAP_ENHANCEMENT
+    // we have second FB for HWCv1.1
+    if (mFbDev2) {
+        framebuffer_close(mFbDev2);
+    }
+#endif
     delete mCBContext;
 }
 
@@ -255,7 +265,23 @@ int HWComposer::loadFbHalModule()
         return err;
     }
 
+#ifdef OMAP_ENHANCEMENT
+    err = framebuffer_open(module, &mFbDev, "fb0");
+    if (err) {
+        ALOGE("framebuffer_open failed for fb0 (%s)", strerror(-err));
+        return err;
+    }
+    // open the second fb device, as we continue to use FB HAL
+    // for HWCv1.1 support.
+    // FIXME: get away with FB HAL.
+    err = framebuffer_open(module, &mFbDev2, "fb1");
+    if (err) {
+        ALOGE("framebuffer_open for fb1 failed (%s)", strerror(-err));
+    }
+    return err;
+#else
     return framebuffer_open(module, &mFbDev);
+#endif
 }
 
 status_t HWComposer::initCheck() const {
