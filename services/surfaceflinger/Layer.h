@@ -241,6 +241,11 @@ public:
      */
     virtual bool isBlurLayer() const { return false; }
 
+    // LayerBase interface
+#ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
+    virtual void setIdentity(HWComposer::HWCLayerInterface& layer);
+#endif
+
 protected:
     /*
      * onDraw - draws the surface.
@@ -649,6 +654,9 @@ private:
     // Set to true once we've returned this surface's handle
     mutable bool mHasSurface;
     const wp<Client> mClientRef;
+#ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
+    const uint32_t mIdentity;
+#endif
 
     // This layer can be a cursor on some displays.
     bool mPotentialCursor;

@@ -63,6 +63,11 @@
 #endif
 
 #define MAX_POSITION 32767
+
+#ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
+static int32_t sIdentity = 1;
+#endif
+
 namespace android {
 
 // ---------------------------------------------------------------------------
@@ -99,6 +104,9 @@ Layer::Layer(SurfaceFlinger* flinger, const sp<Client>& client,
         mProtectedByApp(false),
         mHasSurface(false),
         mClientRef(client),
+#ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
+        mIdentity(uint32_t(android_atomic_inc(&sIdentity))),
+#endif
         mPotentialCursor(false),
         mQueueItemLock(),
         mQueueItemCondition(),
@@ -505,6 +513,12 @@ FloatRect Layer::computeCrop(const sp<const DisplayDevice>& hw) const {
 
     return crop;
 }
+
+#ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
+void Layer::setIdentity(HWComposer::HWCLayerInterface& layer) {
+    layer.setIdentity(mIdentity);
+}
+#endif
 
 #ifdef USE_HWC2
 void Layer::setGeometry(const sp<const DisplayDevice>& displayDevice)
