@@ -45,6 +45,7 @@ struct hwc_procs;
 struct framebuffer_device_t;
 #ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
 struct hwc_layer_stack;
+struct hwc_display_info;
 struct hwc_layer_extended;
 struct hwc_layer_list_extended;
 #endif
@@ -342,6 +343,7 @@ private:
     static int hook_extension_cb(struct hwc_procs* procs, int operation,
             void** data, int size);
     int extendedApiLayerStack(hwc_layer_stack* param);
+    int extendedApiDisplayInfo(hwc_display_info* param);
     int extendedApiLayerData(hwc_layer_extended* linfo);
 #endif
     inline void invalidate();
