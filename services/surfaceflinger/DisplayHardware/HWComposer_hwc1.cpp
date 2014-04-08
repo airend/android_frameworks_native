@@ -296,6 +296,11 @@ int HWComposer::hook_extension_cb(struct hwc_procs* procs __unused, int operatio
         void** data __unused, int size __unused) {
     int rv = -1;
     switch (operation) {
+    case HWC_EXTENDED_OP_LAYERSTACK:
+        if (size != sizeof(hwc_layer_stack_t))
+            return -1;
+        rv = reinterpret_cast<cb_context *>(procs)->hwc->extendedApiLayerStack((hwc_layer_stack_t*)*data);
+        break;
     case HWC_EXTENDED_OP_LAYERDATA:
         if (size == -1)
             return 0;
@@ -305,6 +310,14 @@ int HWComposer::hook_extension_cb(struct hwc_procs* procs __unused, int operatio
         break;
     }
     return rv;
+}
+
+int HWComposer::extendedApiLayerStack(hwc_layer_stack* param) {
+    uint32_t dpy = param->dpy;
+    if (dpy > 31 || !mAllocatedDisplayIDs.hasBit(dpy))
+        return BAD_INDEX;
+    param->stack = mDisplayData[dpy].layerStack;
+    return NO_ERROR;
 }
 
 int HWComposer::extendedApiLayerData(hwc_layer_extended* linfo) {
@@ -687,12 +700,30 @@ status_t HWComposer::createWorkList(int32_t id, size_t numLayers) {
         disp.list->flags = HWC_GEOMETRY_CHANGED;
 #ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
         disp.list->flags |= HWC_EXTENDED_API;
+        disp.layerStack = 0;
         disp.listExt->numHwLayers = numLayers;
 #endif
         disp.list->numHwLayers = numLayers;
     }
     return NO_ERROR;
 }
+
+#ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
+status_t HWComposer::setLayerStack(int32_t id, uint32_t stack) {
+    if (uint32_t(id)>31 || !mAllocatedDisplayIDs.hasBit(id)) {
+        return BAD_INDEX;
+    }
+
+    DisplayData& disp(mDisplayData[id]);
+    if (!disp.list) {
+        return BAD_INDEX;
+    }
+
+    disp.layerStack = stack;
+
+    return NO_ERROR;
+}
+#endif
 
 status_t HWComposer::setFramebufferTarget(int32_t id,
         const sp<Fence>& acquireFence, const sp<GraphicBuffer>& buf) {
@@ -1431,7 +1462,7 @@ HWComposer::DisplayData::DisplayData()
     hasFbComp(false), hasOvComp(false),
     capacity(0), list(NULL),
 #ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
-    listExt(NULL),
+    layerStack(0), listExt(NULL),
 #endif
     framebufferTarget(NULL), fbTargetHandle(0),
     lastRetireFence(Fence::NO_FENCE), lastDisplayFence(Fence::NO_FENCE),
