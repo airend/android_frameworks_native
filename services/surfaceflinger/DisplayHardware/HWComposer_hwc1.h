@@ -44,6 +44,7 @@ struct hwc_layer_1;
 struct hwc_procs;
 struct framebuffer_device_t;
 #ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
+struct hwc_layer_stack;
 struct hwc_layer_extended;
 struct hwc_layer_list_extended;
 #endif
@@ -117,6 +118,10 @@ public:
 
     // create a work list for numLayers layer. sets HWC_GEOMETRY_CHANGED.
     status_t createWorkList(int32_t id, size_t numLayers);
+
+#ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
+    status_t setLayerStack(int32_t id, uint32_t stack);
+#endif
 
     bool supportsFramebufferTarget() const;
 
@@ -356,6 +361,7 @@ private:
 #ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
     static int hook_extension_cb(struct hwc_procs* procs, int operation,
             void** data, int size);
+    int extendedApiLayerStack(hwc_layer_stack* param);
     int extendedApiLayerData(hwc_layer_extended* linfo);
 #endif
     inline void invalidate();
@@ -379,6 +385,7 @@ private:
         size_t capacity;
         hwc_display_contents_1* list;
 #ifdef OMAP_ENHANCEMENT_HWC_EXTENDED_API
+        uint32_t layerStack;
         hwc_layer_list_extended* listExt;
 #endif
         hwc_layer_1* framebufferTarget;
