@@ -499,12 +499,21 @@ EGLSurface eglCreateWindowSurface(  EGLDisplay dpy, EGLConfig config,
         // modify the EGLconfig's format before setting the native window's
         // format.
 
+        EGLint format;
+        android_dataspace dataSpace = HAL_DATASPACE_UNKNOWN;
+
+#if 1
+        if (!cnx->egl.eglGetConfigAttrib(iDpy, config, EGL_NATIVE_VISUAL_ID,
+                &format)) {
+            ALOGE("eglGetConfigAttrib(EGL_NATIVE_VISUAL_ID) failed: %#x",
+                    eglGetError());
+            format = 0;
+        }
+#else
         EGLint componentType = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
         cnx->egl.eglGetConfigAttrib(iDpy, config, EGL_COLOR_COMPONENT_TYPE_EXT,
                                     &componentType);
 
-        EGLint format;
-        android_dataspace dataSpace = HAL_DATASPACE_UNKNOWN;
         EGLint a = 0;
         EGLint r, g, b;
         r = g = b = 0;
@@ -539,6 +548,7 @@ EGLSurface eglCreateWindowSurface(  EGLDisplay dpy, EGLConfig config,
                 format = HAL_PIXEL_FORMAT_RGBA_FP16;
             }
         }
+#endif
 
         // now select a corresponding sRGB format if needed
         if (attrib_list && dp->haveExtension("EGL_KHR_gl_colorspace")) {
