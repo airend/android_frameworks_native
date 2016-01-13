@@ -375,9 +375,9 @@ static status_t selectEGLConfig(EGLDisplay display, EGLint format,
     EGLAttributeVector attribs;
     if (renderableType) {
         attribs[EGL_RENDERABLE_TYPE]            = renderableType;
-        //attribs[EGL_RECORDABLE_ANDROID]         = EGL_TRUE;
+        attribs[EGL_RECORDABLE_ANDROID]         = EGL_TRUE;
         attribs[EGL_SURFACE_TYPE]               = EGL_WINDOW_BIT|EGL_PBUFFER_BIT;
-        //attribs[EGL_FRAMEBUFFER_TARGET_ANDROID] = EGL_TRUE;
+        attribs[EGL_FRAMEBUFFER_TARGET_ANDROID] = EGL_TRUE;
         attribs[EGL_RED_SIZE]                   = 8;
         attribs[EGL_GREEN_SIZE]                 = 8;
         attribs[EGL_BLUE_SIZE]                  = 8;
