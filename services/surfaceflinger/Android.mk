@@ -99,6 +99,10 @@ ifeq ($(BOARD_USE_BGRA_8888),true)
     LOCAL_CFLAGS += -DUSE_BGRA_8888
 endif
 
+ifeq ($(OMAP_ENHANCEMENT),true)
+    LOCAL_CFLAGS += -DOMAP_ENHANCEMENT
+endif
+
 LOCAL_CFLAGS += -fvisibility=hidden -Werror=format
 LOCAL_CFLAGS += -std=c++11
 
