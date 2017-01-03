@@ -452,7 +452,8 @@ status_t HWComposer::queryDisplayProperties(int disp) {
 
     // FIXME: what should we set the format to?
 #if defined(USE_BGRA_8888) || defined(OMAP_ENHANCEMENT)
-    mDisplayData[disp].format = HAL_PIXEL_FORMAT_BGRA_8888;
+    mDisplayData[disp].format = hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_3) ?
+        HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED : HAL_PIXEL_FORMAT_BGRA_8888;
 #else
     mDisplayData[disp].format = HAL_PIXEL_FORMAT_RGBA_8888;
 #endif
@@ -907,7 +908,8 @@ int HWComposer::getVisualID() const {
         // is supported by the implementation. we can only be in this case
         // if we have HWC 1.1
 #if defined(USE_BGRA_8888) || defined(OMAP_ENHANCEMENT)
-        return HAL_PIXEL_FORMAT_BGRA_8888;
+        return hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_3) ?
+            HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED : HAL_PIXEL_FORMAT_BGRA_8888;
 #else
         return HAL_PIXEL_FORMAT_RGBA_8888;
 #endif
