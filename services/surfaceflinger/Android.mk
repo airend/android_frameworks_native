@@ -65,6 +65,9 @@ else
     ifeq ($(OMAP_ENHANCEMENT),true)
         LOCAL_CFLAGS += -DOMAP_ENHANCEMENT
     endif
+    ifeq ($(OMAP_ENHANCEMENT_HWC_EXTENDED_API),true)
+        LOCAL_CFLAGS += -DOMAP_ENHANCEMENT_HWC_EXTENDED_API
+    endif
 endif
 
 ifeq ($(TARGET_BOARD_PLATFORM),omap4)
