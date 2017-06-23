@@ -67,7 +67,7 @@ public:
     {
     }
 
-    virtual ~BpGraphicBufferProducer() override;
+    virtual ~BpGraphicBufferProducer();
 
     virtual status_t requestBuffer(int bufferIdx, sp<GraphicBuffer>* buf) {
         Parcel data, reply;
