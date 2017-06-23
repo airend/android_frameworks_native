@@ -36,6 +36,12 @@ LOCAL_CPPFLAGS += -Wno-gnu-zero-variadic-macro-arguments
 # Don't warn about struct padding
 LOCAL_CPPFLAGS += -Wno-padded
 
+# Don't warn about zero as null pointer constant
+LOCAL_CPPFLAGS += -Wno-zero-as-null-pointer-constant
+
+# Don't warn about unknown warning options
+LOCAL_CPPFLAGS += -Wno-unknown-warning-option
+
 LOCAL_CPPFLAGS += -DDEBUG_ONLY_CODE=$(if $(filter userdebug eng,$(TARGET_BUILD_VARIANT)),1,0)
 
 LOCAL_SRC_FILES := \

@@ -34,6 +34,12 @@ LOCAL_CPPFLAGS += -Wno-four-char-constants
 # Don't warn about struct padding
 LOCAL_CPPFLAGS += -Wno-padded
 
+# Don't warn about zero as null pointer constant
+LOCAL_CPPFLAGS += -Wno-zero-as-null-pointer-constant
+
+# Don't warn about unknown warning options
+LOCAL_CPPFLAGS += -Wno-unknown-warning-option
+
 LOCAL_SRC_FILES := \
 	Fence.cpp \
 	FrameStats.cpp \

@@ -34,6 +34,12 @@ LOCAL_CPPFLAGS := -std=c++14 \
 	-Wno-global-constructors \
 	-Wno-zero-length-array
 
+# Don't warn about zero as null pointer constant
+LOCAL_CPPFLAGS += -Wno-zero-as-null-pointer-constant
+
+# Don't warn about unknown warning options
+LOCAL_CPPFLAGS += -Wno-unknown-warning-option
+
 LOCAL_C_INCLUDES := \
 	frameworks/native/vulkan/include \
 	system/core/libsync/include
