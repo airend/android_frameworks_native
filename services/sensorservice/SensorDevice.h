@@ -17,7 +17,6 @@
 #ifndef ANDROID_SENSOR_DEVICE_H
 #define ANDROID_SENSOR_DEVICE_H
 
-#include "SensorDeviceUtils.h"
 #include "SensorServiceUtils.h"
 
 #include <sensor/Sensor.h>
@@ -40,9 +39,12 @@
 namespace android {
 
 // ---------------------------------------------------------------------------
+using SensorServiceUtil::Dumpable;
+using hardware::Return;
 
-class SensorDevice : public Singleton<SensorDevice>, public SensorServiceUtil::Dumpable {
+class SensorDevice : public Singleton<SensorDevice>, public Dumpable {
 public:
+
     class HidlTransportErrorLog {
      public:
 
@@ -103,7 +105,7 @@ public:
 private:
     friend class Singleton<SensorDevice>;
 
-    sp<hardware::sensors::V1_0::ISensors> mSensors;
+    sp<android::hardware::sensors::V1_0::ISensors> mSensors;
     Vector<sensor_t> mSensorList;
     std::unordered_map<int32_t, sensor_t*> mConnectedDynamicSensors;
 
@@ -172,8 +174,6 @@ private:
         }
         return std::move(ret);
     }
-    //TODO(b/67425500): remove waiter after bug is resolved.
-    sp<SensorDeviceUtils::HidlServiceRegistrationWaiter> mRestartWaiter;
 
     bool isClientDisabled(void* ident);
     bool isClientDisabledLocked(void* ident);
